@@ -1,1 +1,112 @@
 
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Name Generator</title>
+<meta name="description" content="Generate unique Instagram, Facebook, gaming and stylish usernames for free.">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f4ff;color:#202044}
+header{background:linear-gradient(135deg,#6545e8,#b044df);color:white;text-align:center;padding:35px 15px}
+header h1{margin:0 0 10px;font-size:30px}
+header p{margin:0;line-height:1.6}
+main{max-width:650px;margin:25px auto;padding:0 15px}
+.card{background:white;padding:22px;border-radius:16px;box-shadow:0 5px 20px #20204412}
+label{display:block;margin:15px 0 7px;font-weight:bold}
+select,input{width:100%;padding:13px;border:1px solid #ddd;border-radius:9px;font-size:16px}
+button{border:0;border-radius:9px;padding:13px;cursor:pointer;font-size:16px;font-weight:bold}
+.generate{background:#6545e8;color:white;width:100%;margin-top:18px}
+.result{background:#f5f2ff;padding:12px;margin-top:12px;border-radius:9px;display:flex;align-items:center;justify-content:space-between;gap:8px;overflow-wrap:anywhere}
+.result span{overflow-wrap:anywhere}
+.copy{background:#e4dcff;color:#4528b5;flex-shrink:0;padding:10px}
+h2{font-size:21px}
+section{margin-top:22px;line-height:1.7}
+footer{text-align:center;padding:25px;color:#666;font-size:14px}
+</style>
+</head>
+<body>
+<header>
+<h1>✨ Free Name Generator</h1>
+<p>Create stylish and unique names for Instagram, Facebook and gaming!</p>
+</header>
+<main>
+<div class="card">
+<h2>Generate Your Name</h2>
+<label for="category">Choose a category</label>
+<select id="category">
+<option value="insta">Instagram</option>
+<option value="facebook">Facebook</option>
+<option value="gaming">Gaming</option>
+<option value="cute">Cute & Stylish</option>
+<option value="attitude">Attitude Names</option>
+</select>
+<label for="keyword">Your name or favourite word (optional)</label>
+<input id="keyword" placeholder="e.g. Sneha, Moon, Star">
+<button class="generate" onclick="generateNames()">Generate Names ✨</button>
+<div id="results" aria-live="polite"></div>
+</div>
+<section>
+<h2>About This Name Generator</h2>
+<p>Find creative username ideas for your social media profiles and games. Choose a category, enter a favourite word if you like, and generate new ideas for free.</p>
+<h2>Tips for Choosing a Username</h2>
+<p>Choose a name that is easy to remember, simple to spell and reflects your personality. Always check whether the username is available on your chosen platform.</p>
+</section>
+</main>
+<footer>© 2026 Free Name Generator | Made for creative minds</footer>
+<script>
+const styles={
+insta:["vibes","diary","official","glow","world","xoxo","dreams","verse"],
+facebook:["official","writes","world","diary","here","stories","life","corner"],
+gaming:["Gamer","Shadow","Blaze","Ninja","Phantom","Legend","Hunter","Storm"],
+cute:["Bunny","Daisy","Sweet","Angel","Cherry","Misty","Peachy","Dolly"],
+attitude:["Royal","Fearless","Savage","Legend","Rebel","Boss","Alpha","Icon"]
+};
+function generateNames(){
+const category=document.getElementById("category").value;
+let word=document.getElementById("keyword").value.trim();
+if(!word){
+const defaults=["Moon","Star","Dream","Nova","Sky","Luna","Spark","Ocean"];
+word=defaults[Math.floor(Math.random()*defaults.length)];
+}
+word=word.replace(/\s+/g,"");
+const extras=styles[category];
+const symbols=["_",".","x",""];
+const results=[];
+while(results.length<8){
+const extra=extras[Math.floor(Math.random()*extras.length)];
+const symbol=symbols[Math.floor(Math.random()*symbols.length)];
+const patterns=[
+word+symbol+extra,
+extra+symbol+word,
+word+Math.floor(Math.random()*999+1),
+"its"+word,
+"the"+word+extra,
+word+symbol+"official"
+];
+const name=patterns[Math.floor(Math.random()*patterns.length)];
+if(!results.includes(name))results.push(name);
+}
+document.getElementById("results").innerHTML=results.map(name=>
+'<div class="result"><span>'+name.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))+'</span><button class="copy" onclick="copyName(this)">Copy</button></div>'
+).join("");
+}
+function copyName(button){
+const name=button.parentElement.querySelector("span").textContent;
+if(navigator.clipboard&&navigator.clipboard.writeText){
+navigator.clipboard.writeText(name).then(()=>button.textContent="Copied!").catch(()=>fallbackCopy(name,button));
+}else{fallbackCopy(name,button)}
+}
+function fallbackCopy(name,button){
+const area=document.createElement("textarea");
+area.value=name;document.body.appendChild(area);area.select();
+try{document.execCommand("copy");button.textContent="Copied!";}
+catch(e){button.textContent="Select & Copy";}
+area.remove();
+}
+</script>
+</body>
+</html>
